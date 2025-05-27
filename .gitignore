@@ -1,0 +1,53 @@
+# === Python / Django ===
+*.pyc
+*.pyo
+__pycache__/
+*.sqlite3
+*.log
+
+# Virtual environment
+**/venv/
+.env
+.env.*
+
+# Django static/media (optional if using collectstatic)
+staticfiles/
+media/
+
+# Django migrations (optional, or ignore specific ones)
+**/migrations/*.py
+!**/migrations/__init__.py
+
+# === Node / Vue ===
+node_modules/
+dist/
+*.local
+
+# === VSCode ===
+.vscode/
+
+# === Docker ===
+*.pid
+docker-compose.override.yml
+
+# === OS Files ===
+.DS_Store
+Thumbs.db
+
+# === Logs ===
+*.log
+
+# === Coverage / Testing ===
+coverage/
+htmlcov/
+*.cover
+
+# === PyInstaller ===
+*.spec
+
+# === JetBrains IDE ===
+.idea/
+
+# === Others ===
+__pypackages__/
+*.egg-info/
