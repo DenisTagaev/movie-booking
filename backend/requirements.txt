@@ -1,2 +1,4 @@
 Django>=4.2,<5
 mysqlclient>=2.2
+requests
+redis
