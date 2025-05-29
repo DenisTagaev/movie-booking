@@ -1,6 +1,15 @@
+"""View functions for the movie booking backend.
+
+Includes handlers for:
+- OMDB movie fetching for test display
+- Health check endpoint for container monitoring
+- Custom error views (e.g., 404 JSON responses)
+"""
+
+
 from django.http import JsonResponse
-from .utils.omdb_fetcher import fetch_random_omdb_movie
 from django.views.decorators.http import require_GET
+from .utils.omdb_fetcher import fetch_random_omdb_movie
 @require_GET
 def omdb_movies_view(request):
     movie=fetch_random_omdb_movie()

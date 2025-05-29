@@ -1,3 +1,9 @@
+"""URL configuration for the booking_backend project.
+
+It connects views to routes and integrates
+with the frontend routing where applicable.
+"""
+
 from django.contrib import admin
 from django.urls import path
 from .views import omdb_movies_view, health_check

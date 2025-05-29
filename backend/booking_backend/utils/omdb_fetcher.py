@@ -1,3 +1,13 @@
+"""This module handles fetching movie data from the OMDb API.
+It integrates Redis for caching and rate limiting to prevent excessive external API calls.
+
+Functions:
+- fetch_random_movie(): Fetches a single random movie from a random franchise title using OMDb.
+- is_rate_limited(): Checks and enforces API rate limits using Redis.
+- rate_limited request(): Checks if the requests rate exceeds the quote and prevent overloading
+"""
+
+
 import random
 import os
 import time

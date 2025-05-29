@@ -1,15 +1,25 @@
+"""
+Django settings for the booking_backend project.
+
+This file contains the configuration for the Django project, including:
+- Installed applications and middleware
+- Database setup (using MySQL)
+- Environment-based secret and debug settings
+- Static files configuration
+- Internationalization and timezone settings
+- Security and authentication options
+
+Settings are sourced from environment variables where appropriate to support
+Docker-based deployment and secure configuration.
+"""
+
 import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'fallback-secret-key')
+SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
 DEBUG = os.getenv('DJANGO_DEBUG', 'False') == 'True'
 
 
@@ -58,10 +68,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'booking_backend.wsgi.application'
 
-
-# Database
-# https://docs.djangoproject.com/en/5.2/ref/settings/#databases
-
+#Database
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
@@ -76,8 +83,6 @@ DATABASES = {
 
 
 # Password validation
-# https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
-
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -93,13 +98,12 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-# Allow frontend to connect (e.g., running on localhost:5173 for Vite)
+# Allow frontend to connect
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",  # or wherever your Vue app runs
 ]
 
 # Internationalization
-# https://docs.djangoproject.com/en/5.2/topics/i18n/
 
 LANGUAGE_CODE = 'en-us'
 
@@ -111,11 +115,7 @@ USE_TZ = True
 
 
 # Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/5.2/howto/static-files/
-
 STATIC_URL = 'static/'
 
 # Default primary key field type
-# https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
-
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
