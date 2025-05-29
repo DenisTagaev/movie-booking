@@ -4,23 +4,47 @@ import HelloWorld from './components/HelloWorld.vue'
 </script>
 
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
-
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-
-      <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
-      </nav>
+  <div class="layout">
+    <div class="content">
+      <header>
+        <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
+        
+        <div class="wrapper">
+        <HelloWorld msg="You did it!" />
+        
+        <nav>
+          <RouterLink to="/">Home</RouterLink>
+          <RouterLink to="/about">About</RouterLink>
+        </nav>
+      </div>
+      </header>
+      
+      <RouterView />
     </div>
-  </header>
-
-  <RouterView />
+    <footer>
+      <p>&copy; {{ new Date().getFullYear() }} Movie Booking App</p>
+    </footer>
+  </div>
 </template>
 
 <style scoped>
+
+.layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.content {
+  flex: 1;
+}
+
+footer {
+  text-align: center;
+  padding: 1rem;
+  font-size: 0.9rem;
+}
+
 header {
   line-height: 1.5;
   max-height: 100vh;
