@@ -6,11 +6,16 @@ import Button from 'primevue/button'
 
 const email: Ref<string, string> = ref('')
 const password: Ref<string, string> = ref('')
+const showPassword: Ref<boolean, boolean> = ref(false)
 
 const handleLogin: () => void = 
 () => {
   console.log('Attempting login with:', email.value, password.value)
   // TODO: actual login logic
+}
+
+function togglePasswordVisibility(): void {
+  showPassword.value = !showPassword.value
 }
 </script>
 
@@ -38,10 +43,15 @@ const handleLogin: () => void =
             id="password"
             toggleMask
             inputId="password"
+            :type="showPassword ? 'text' : 'password'"
             :input-style="{ width: '100%'}"
             :feedback="false"
             required
-          />
+          >
+            <template #maskicon>
+              <i :class="showPassword? 'pi pi-eye-slash': 'pi pi-eye'" class="custom-mask-icon" @click="togglePasswordVisibility"/>
+            </template>
+          </Password>
         </fieldset>
   
         <Button
@@ -95,6 +105,25 @@ const handleLogin: () => void =
         display: block;
       margin-bottom: 0.5rem;
       font-weight: 500;
+    }
+
+    .p-password{
+      position: relative;
+
+      .p-inputtext{
+        padding-right: 2.5rem;
+      }
+
+      .custom-mask-icon{
+        position: absolute;
+        top: 50%;
+        right: 0.75rem;
+        transform: translateY(-50%);
+        z-index: 2;
+        cursor: pointer;
+        font-size: 1.2rem;
+        pointer-events: auto;
+      }
     }
     
   }
