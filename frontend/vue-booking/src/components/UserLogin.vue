@@ -3,10 +3,10 @@ import { Ref, ref } from 'vue'
 import InputText  from 'primevue/inputtext'
 import Password from 'primevue/password'
 import Button from 'primevue/button'
+import { FloatLabel } from 'primevue'
 
 const email: Ref<string, string> = ref('')
 const password: Ref<string, string> = ref('')
-const showPassword: Ref<boolean, boolean> = ref(false)
 
 const handleLogin: () => void = 
 () => {
@@ -14,9 +14,6 @@ const handleLogin: () => void =
   // TODO: actual login logic
 }
 
-function togglePasswordVisibility(): void {
-  showPassword.value = !showPassword.value
-}
 </script>
 
 <template>
@@ -26,32 +23,33 @@ function togglePasswordVisibility(): void {
         <p class="login-subtitle">to continue to Movie Booking App</p>
   
         <fieldset class="form-group">
-          <label for="email">Email</label>
-          <InputText
-            v-model="email"
-            id="email"
-            type="email"
-            autocomplete="email"
-            required
-          />
+          <FloatLabel variant="on">
+              <InputText
+                v-model="email"
+                id="email"
+                type="email"
+                autocomplete="email"
+                style="width: 100%;"
+                required
+              />
+              <label for="email">Email</label>
+          </FloatLabel>
         </fieldset>
   
         <fieldset class="form-group password-field">
-          <label for="password">Password</label>
-          <Password
-            v-model="password"
-            id="password"
-            toggleMask
-            inputId="password"
-            :type="showPassword ? 'text' : 'password'"
-            :input-style="{ width: '100%'}"
-            :feedback="false"
-            required
-          >
-            <template #maskicon>
-              <i :class="showPassword? 'pi pi-eye-slash': 'pi pi-eye'" class="custom-mask-icon" @click="togglePasswordVisibility"/>
-            </template>
-          </Password>
+          <FloatLabel variant="on">
+            <Password
+              v-model="password"
+              id="password"
+              inputId="password"
+              style="width: 100%;"
+              :input-style="{ width: '100%'}"
+              :feedback="false"
+              required
+              >
+            </Password>
+            <label for="password">Password</label>
+          </FloatLabel>
         </fieldset>
   
         <Button
@@ -71,8 +69,6 @@ function togglePasswordVisibility(): void {
     align-items: center;
     padding: 2rem;
     min-height: 100vh;
-    background: var(--surface-ground);
-    color: var(--text-color);
   }
   
   .login-form {
@@ -80,7 +76,7 @@ function togglePasswordVisibility(): void {
     border-radius: 12px;
     width: 100%;
     max-width: 400px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
   }
   
   .login-title {
@@ -100,32 +96,6 @@ function togglePasswordVisibility(): void {
     display: flex;
     flex-direction: column;
     margin-bottom: 1.25rem;
-  
-    label {
-        display: block;
-      margin-bottom: 0.5rem;
-      font-weight: 500;
-    }
-
-    .p-password{
-      position: relative;
-
-      .p-inputtext{
-        padding-right: 2.5rem;
-      }
-
-      .custom-mask-icon{
-        position: absolute;
-        top: 50%;
-        right: 0.75rem;
-        transform: translateY(-50%);
-        z-index: 2;
-        cursor: pointer;
-        font-size: 1.2rem;
-        pointer-events: auto;
-      }
-    }
-    
   }
   
   .login-btn {
