@@ -4,6 +4,7 @@ import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 import PrimeVue from 'primevue/config'
 import Material from '@primeuix/themes/material'
+import ToastService from 'primevue/toastservice'
 import 'primeicons/primeicons.css'
 
 import App from './App.vue'
@@ -21,4 +22,5 @@ app.use(PrimeVue, {
         }
     }
 })
+app.use(ToastService)
 app.use(router).mount('#app')

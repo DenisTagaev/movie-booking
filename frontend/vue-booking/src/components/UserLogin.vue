@@ -1,31 +1,65 @@
 <script setup lang="ts">
-import { Ref, ref } from 'vue'
+import { reactive, watch } from 'vue'
+import { useToast } from "primevue/usetoast";
+import { Form, FormField } from '@primevue/forms';
 import InputText  from 'primevue/inputtext'
 import Password from 'primevue/password'
 import Button from 'primevue/button'
-import { FloatLabel } from 'primevue'
+import { FloatLabel, ToastServiceMethods, Message } from 'primevue'
 
-const email: Ref<string, string> = ref('')
-const password: Ref<string, string> = ref('')
+import { validateLoginForm } from '@/validators/validateLoginForm'
+
+const toast: ToastServiceMethods = useToast();
+
+const initialLoginValues: {
+    email: string;
+    password: string;
+} = reactive({
+  email: '',
+  password: ''
+})
+const errors: {
+    email: null | string;
+    password: null | string;
+} = reactive({
+  email: null,
+  password: null
+})
+
+watch(() => [initialLoginValues.email, initialLoginValues.password], async () => {
+  const result = await validateLoginForm(initialLoginValues)
+  errors.email = result.errors.email?.message || null
+  errors.password = result.errors.password?.message || null
+}, { immediate: true })
 
 const handleLogin: () => void = 
 () => {
-  console.log('Attempting login with:', email.value, password.value)
   // TODO: actual login logic
 }
 
+const onFormSubmit = ({ valid }: 
+{valid: boolean}) => {
+    if (valid) {
+        toast.add({ severity: 'success', summary: 'Login Successful!', life: 2000 });
+    }
+};
 </script>
 
 <template>
     <main class="login-container">
-      <form class="login-form" @submit.prevent="handleLogin">
+      <Form 
+        v-slot="$form"   
+        :model="initialLoginValues"
+        class="login-form" 
+        @submit.prevent="handleLogin"
+      >
         <h2 class="login-title">Sign in</h2>
         <p class="login-subtitle">to continue to Movie Booking App</p>
   
-        <fieldset class="form-group">
+        <FormField class="form-group">
           <FloatLabel variant="on">
               <InputText
-                v-model="email"
+                v-model="initialLoginValues.email"
                 id="email"
                 type="email"
                 autocomplete="email"
@@ -34,12 +68,13 @@ const handleLogin: () => void =
               />
               <label for="email">Email</label>
           </FloatLabel>
-        </fieldset>
+          <Message v-if="$form.email?.invalid" severity="error" size="small" variant="simple">{{ $form.email.error?.message }}</Message>
+        </FormField>
   
-        <fieldset class="form-group password-field">
+        <FormField class="form-group password-field">
           <FloatLabel variant="on">
             <Password
-              v-model="password"
+              v-model="initialLoginValues.password"
               id="password"
               inputId="password"
               style="width: 100%;"
@@ -50,15 +85,16 @@ const handleLogin: () => void =
             </Password>
             <label for="password">Password</label>
           </FloatLabel>
-        </fieldset>
+          <Message v-if="$form.password?.invalid" severity="error" size="small" variant="simple">{{ $form.password.error?.message }}</Message>
+        </FormField>
   
         <Button
           type="submit"
           label="Login"
           class="p-button p-button-primary login-btn"
-          :disabled="!email || !password"
-        />
-      </form>
+          />
+          <!-- :disabled="!$form.email.valid || !$form.password.valid" -->
+      </Form>
     </main>
   </template>
   
