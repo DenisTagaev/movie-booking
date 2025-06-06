@@ -7,6 +7,7 @@ import Password from 'primevue/password'
 import Button from 'primevue/button'
 import { FloatLabel, ToastServiceMethods, Message } from 'primevue'
 
+import debounce from '@/utils/debounce'
 import { validateLoginForm } from '@/validators/validateLoginForm'
 
 const toast: ToastServiceMethods = useToast();
@@ -25,12 +26,22 @@ const errors: {
   email: null,
   password: null
 })
+const focusedField: {
+    email: boolean;
+    password: boolean;
+} = reactive(
+  {
+    email: false,
+    password: false
+  }
+)
 
-watch(() => [initialLoginValues.email, initialLoginValues.password], async () => {
-  const result = await validateLoginForm(initialLoginValues)
-  errors.email = result.errors.email?.message || null
-  errors.password = result.errors.password?.message || null
-}, { immediate: true })
+watch(() => [initialLoginValues.email, initialLoginValues.password], 
+  debounce(async () => {
+    const { errors: validationErrors } = await validateLoginForm(initialLoginValues)
+    errors.email =  validationErrors.email?.message || null
+    errors.password =  validationErrors.password?.message || null
+  }, 300), { immediate: true })
 
 const handleLogin: () => void = 
 () => {
@@ -64,11 +75,13 @@ const onFormSubmit = ({ valid }:
                 type="email"
                 autocomplete="email"
                 style="width: 100%;"
+                @focus="focusedField.email = true"
+                @blur="focusedField.email = false"
                 required
               />
               <label for="email">Email</label>
           </FloatLabel>
-          <Message v-if="$form.email?.invalid" severity="error" size="small" variant="simple">{{ $form.email.error?.message }}</Message>
+          <Message v-if="focusedField.email && errors.email" severity="error" size="small" variant="simple">{{ errors.email }}</Message>
         </FormField>
   
         <FormField class="form-group password-field">
@@ -80,12 +93,14 @@ const onFormSubmit = ({ valid }:
               style="width: 100%;"
               :input-style="{ width: '100%'}"
               :feedback="false"
+              @focus="focusedField.password = true"
+              @blur="focusedField.password = false"
               required
               >
             </Password>
             <label for="password">Password</label>
           </FloatLabel>
-          <Message v-if="$form.password?.invalid" severity="error" size="small" variant="simple">{{ $form.password.error?.message }}</Message>
+          <Message v-if="focusedField.password && errors.password" severity="error" size="small" variant="simple">{{ errors.password }}</Message>
         </FormField>
   
         <Button
