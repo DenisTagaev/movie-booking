@@ -112,7 +112,11 @@ const onFormSubmit = ({ valid }:
           label="Login"
           class="p-button p-button-primary login-btn"
           :disabled="!isFormValid"
-          />
+        />
+        <p class="register-link">
+          <span>Don't have an account?</span>
+          <RouterLink to="/signup">Sign up</RouterLink>
+        </p>
       </Form>
     </main>
   </template>
@@ -157,7 +161,23 @@ const onFormSubmit = ({ valid }:
     width: 100%;
     font-weight: 600;
   }
+  .register-link {
+    margin-top: 1.5rem;
+    text-align: center;
+    font-size: 0.875rem;
+    color: #777;
 
-
+    a {
+      color: var(--p-button-primary-background); 
+      text-decoration: none;
+      font-weight: 600;
+      margin-left: 0.25rem;
+      transition: color 0.2s ease;
+      
+      &:hover {
+        color: var(--p-button-primary-hover-background);
+        text-decoration: underline;
+      }
+    }
+  }
 </style>
-  
