@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { reactive, watch } from 'vue'
+import { computed, ComputedRef, reactive, watch } from 'vue'
 import { useToast } from "primevue/usetoast";
 import { Form, FormField } from '@primevue/forms';
 import InputText  from 'primevue/inputtext'
@@ -12,7 +12,7 @@ import { validateLoginForm } from '@/validators/validateLoginForm'
 
 const toast: ToastServiceMethods = useToast();
 
-const initialLoginValues: {
+const LoginValues: {
     email: string;
     password: string;
 } = reactive({
@@ -35,10 +35,14 @@ const focusedField: {
     password: false
   }
 )
+const isFormValid: ComputedRef<string | false> = 
+  computed(() => {
+  return !errors.email && !errors.password && LoginValues.email && LoginValues.password;
+});
 
-watch(() => [initialLoginValues.email, initialLoginValues.password], 
+watch(() => [LoginValues.email, LoginValues.password], 
   debounce(async () => {
-    const { errors: validationErrors } = await validateLoginForm(initialLoginValues)
+    const { errors: validationErrors } = await validateLoginForm(LoginValues)
     errors.email =  validationErrors.email?.message || null
     errors.password =  validationErrors.password?.message || null
   }, 300), { immediate: true })
@@ -60,7 +64,7 @@ const onFormSubmit = ({ valid }:
     <main class="login-container">
       <Form 
         v-slot="$form"   
-        :model="initialLoginValues"
+        :model="LoginValues"
         class="login-form" 
         @submit.prevent="handleLogin"
       >
@@ -70,7 +74,7 @@ const onFormSubmit = ({ valid }:
         <FormField class="form-group">
           <FloatLabel variant="on">
               <InputText
-                v-model="initialLoginValues.email"
+                v-model="LoginValues.email"
                 id="email"
                 type="email"
                 autocomplete="email"
@@ -87,7 +91,7 @@ const onFormSubmit = ({ valid }:
         <FormField class="form-group password-field">
           <FloatLabel variant="on">
             <Password
-              v-model="initialLoginValues.password"
+              v-model="LoginValues.password"
               id="password"
               inputId="password"
               style="width: 100%;"
@@ -107,8 +111,8 @@ const onFormSubmit = ({ valid }:
           type="submit"
           label="Login"
           class="p-button p-button-primary login-btn"
+          :disabled="!isFormValid"
           />
-          <!-- :disabled="!$form.email.valid || !$form.password.valid" -->
       </Form>
     </main>
   </template>
