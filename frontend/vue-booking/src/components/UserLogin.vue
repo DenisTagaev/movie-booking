@@ -35,13 +35,15 @@ const focusedField: {
     password: false
   }
 )
-const isFormValid: ComputedRef<string | false> = 
-  computed(() => {
-  return !errors.email && !errors.password && LoginValues.email && LoginValues.password;
+const isFormValid: ComputedRef<boolean> = 
+  computed(() :boolean => {
+    const hasNoErrors: boolean = !Object.values(errors).some(Boolean)
+    const allFieldsFilled: boolean = Object.values(LoginValues).every(Boolean)
+    return hasNoErrors && allFieldsFilled
 });
 
 watch(() => [LoginValues.email, LoginValues.password], 
-  debounce(async () => {
+  debounce(async (): Promise<void> => {
     const { errors: validationErrors } = await validateLoginForm(LoginValues)
     errors.email =  validationErrors.email?.message || null
     errors.password =  validationErrors.password?.message || null

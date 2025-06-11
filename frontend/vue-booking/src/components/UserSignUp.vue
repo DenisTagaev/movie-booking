@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { reactive, watch } from 'vue'
+import { computed, ComputedRef, reactive, watch } from 'vue'
 import { Router, useRouter } from 'vue-router'
 import { useToast } from "primevue/usetoast"
 import { Form, FormField } from '@primevue/forms'
@@ -46,16 +46,28 @@ const focusedField: {
   }
 )
 
+const isFormValid: ComputedRef<boolean> = 
+  computed(() :boolean  => {
+    const hasNoErrors: boolean = !Object.values(errors).some(Boolean)
+    const allFieldsFilled: boolean = Object.values(SignUpValues).every(Boolean)
+    return hasNoErrors && allFieldsFilled
+});
+
 watch(() => [SignUpValues.email, SignUpValues.password, SignUpValues.confirmPassword], 
-  debounce(async () => {
+  debounce(async (): Promise<void> => {
     const { errors: validationErrors } = await validateSignUpForm(SignUpValues)
     errors.email =  validationErrors.email?.message || null
     errors.password =  validationErrors.password?.message || null
     errors.confirmPassword = validationErrors.confirmPassword?.message || null
   }, 300), { immediate: true })
 
-async function handleSignUp() {
-  const result = await validateSignUpForm(SignUpValues)
+async function handleSignUp(): Promise<void> {
+  const result: {
+    valid: boolean;
+    errors: Record<string, {
+        message: string;
+    }>;
+} = await validateSignUpForm(SignUpValues)
 
   if (result.valid) {
     // TODO: send data to backend
@@ -124,7 +136,7 @@ async function handleSignUp() {
                 />
                 <label for="confirm-password">Confirm Password</label>
             </FloatLabel>
-            <Message v-if="errors.confirmPassword" severity="error" size="small" variant="simple">
+            <Message v-if="focusedField.confirmPassword && errors.confirmPassword" severity="error" size="small" variant="simple">
                 {{ errors.confirmPassword }}
             </Message>
         </FormField>
@@ -133,6 +145,7 @@ async function handleSignUp() {
           type="submit"
           label="Sign Up"
           class="p-button p-button-primary signup-btn"
+          :disabled="!isFormValid"
         />
   
         <p class="login-link">
@@ -156,7 +169,7 @@ async function handleSignUp() {
   padding: 2rem;
   max-width: 400px;
   width: 100%;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
 }
 .form-title {
   margin-bottom: 1rem;
@@ -185,6 +198,7 @@ async function handleSignUp() {
       
       &:hover {
         color: var(--p-button-primary-hover-background);
+        opacity: 90%;
         text-decoration: underline;
       }
     }
