@@ -3,3 +3,4 @@ mysqlclient>=2.2
 requests
 redis
 django-cors-headers
+djangorestframework
